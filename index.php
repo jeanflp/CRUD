@@ -10,23 +10,53 @@
 </head>
     <body>
     <?php require_once 'process.php'; ?>
-
-    <div class="row justify-content-center">
-        <form action="" method="POST">
-        <div class="form-group">
-        <label>Nome
-        </label>
-        <input type="text" name="name" class="form-control" value="Digite seu nome.">
-        </div>
-        <div class="form-group">
-       <label>Escola</label>
-       <input type="text" name="escola" class="form-control" value="Digite sua escola.">
-        </div>
-        <div class="form-group">
-        <button type="submit" class="btn btn-primary" name="salvar">Salvar</button>
-        </form>
-        </div>
-        <a href="listagem.php" class="btn btn-primary">Listagem</a>
-        </div>
+  <?php
+            if (isset($_SESSION['message'])): ?>
+<?php
+  echo $_SESSION['message'];
+  unset($_SESSION['message']);
+  ?>
+  </div>
+<?php endif?>
+  <div class="container">
+    <?php
+            $mysqli = new mysqli('localhost', 'root', '', 'crud') or die(mysqli_error($mysqli));
+            $result = $mysqli->query("SELECT * FROM data") or die($mysqli->error);
+            //pre_r($result);
+?>
+  <div class="row justify-content-center">
+    <table class="table">
+      <thead>
+                 <tr>
+                        <th>Nome</th>
+                        <th>Escola</th>
+                        <th colspan="2">Ação</th>
+                </tr>
+        </thead>
+      <?php
+            while ($row = $result->fetch_assoc()): ?>
+            <tr>
+                <td><?php echo $row['name']; ?></td>
+                <td><?php echo $row['escola']; ?></td>
+                <td>
+                  <a href="cadastro.php?=<?php echo $row ['id']; ?>"
+                class="btn btn-info">Editar</a>
+                  <a href="process.php?delete=<?php echo $row['id']; ?>"
+                class="btn btn-danger">Deletar</a>
+              </td>
+              </tr>
+      <?php endwhile; ?>
+  </table>
+</div>
+<?php
+            function pre_r( $array ){
+        echo '<pre>';
+        print_r($array);
+        echo '</pre>';
+            }
+    ?>
+<div class="<row justify-content-center">
+        <a href="cadastro.php" class="btn btn-primary">Voltar</a>
+</div>
         </div>
 </html>
